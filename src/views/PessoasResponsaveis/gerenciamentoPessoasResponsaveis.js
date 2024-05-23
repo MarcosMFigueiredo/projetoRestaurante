@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import MaterialTable from "material-table";
 
-const GerenciamentoPessoaResponsavel = (props) => {
+const GerenciamentoPessoasResponsaveis = (props) => {
   const { useState, useEffect } = React;
 
   const [data, setData] = useState([]);
@@ -13,74 +13,70 @@ const GerenciamentoPessoaResponsavel = (props) => {
 
   function handleClick() {
     axios
-      .get("https://demo7955835.mockable.io/pessoaResponsavel")
+      .get("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/pessoasResponsaveis")
       .then((response) => {
         console.log(response)
-        const pessoaResponsavel = response.data.lista.map((c) => {
+        const pessoasResponsaveis = response.data.lista.map((c) => {
           return {
             id: c.id,
             cpf: c.cpf,
-            matricula: c.matricula,
             nome: c.nome,
-            idEndereco: c.idEndereco,
-            curso: c.curso,
+            telefone_whatsapp: c.telefone_whatsapp,
+            email: c.email,
           };
         });
-        setData(pessoaResponsavel);
+        setData(pessoasResponsaveis);
       })
       .catch((error) => console.log(error));
   }
 
   function handleCreate(newData) {
     axios
-      .post("https://demo7955835.mockable.io/alunos", {
+      .post("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/pessoaResponsaveis", {
         id: newData.id,
         cpf: newData.cpf,
-        matricula: newData.matricula,
         nome: newData.nome,
-        idEndereco: newData.idEndereco,
-        curso: newData.curso,
+        telefone_whatsapp: newData.telefone_whatsapp,
+        email: newData.email,
       })
       .then(function (response) {
-        console.log("Aluno salvo com sucesso.");
+        console.log("Responsável salvo com sucesso.");
       });
   }
 
   function handleUpdate(newData) {
     axios
-      .put("https://demo7955835.mockable.io/alunos", {
+      .put("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/pessoasResponsaveis", {
         id: newData.id,
         cpf: newData.cpf,
-        matricula: newData.matricula,
         nome: newData.nome,
-        idEndereco: newData.idEndereco,
-        curso: newData.curso,
+        telefone_whatsapp: newData.telefone_whatsapp,
+        email: newData.email,
       })
       .then(function (response) {
-        console.log("Aluno atualizado com sucesso.");
+        console.log("Responsável atualizado com sucesso.");
       });
   }
 
   function handleDelete(newData) {
     axios
-      .delete("https://demo7955835.mockable.io/alunos", {
+      .delete("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/pessoasResponsaveis", {
         id: newData.id,
       })
       .then(function (response) {
-        console.log("Aluno deletado com sucesso.");
+        console.log("Responsável deletado com sucesso.");
       });
   }
 
   return [
     <MaterialTable
-      title="Gerenciamento de Pessoa Responsável"
+      title="Gerenciamento de Pessoas Responsáveis"
       columns={[
         { title: "Id", field: "id" },
         { title: "cpf", field: "cpf" },
-        { title: "matricula", field: "matricula", type: "numerico" },
         { title: "nome", field: "nome" },
-        { title: "endereco", field: "idEndereco" },
-        { title: "curso", field: "curso" },
+        { title: " telefone_whatsapp", field: "telefone_whatsapp" },
+        { title: "email", field: "email" },
       ]}
       data={data}
       editable={{
@@ -124,4 +120,4 @@ const GerenciamentoPessoaResponsavel = (props) => {
   ];
 };
 
-export default GerenciamentoPessoaResponsavel;
+export default GerenciamentoPessoasResponsaveis;

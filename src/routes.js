@@ -18,6 +18,7 @@
 // @material-ui/icons
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
+import { SupervisorAccount } from "@material-ui/icons";
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
 import BubbleChart from "@material-ui/icons/BubbleChart";
 import LocationOn from "@material-ui/icons/LocationOn";
@@ -31,6 +32,8 @@ import UserProfile from "views/UserProfile/UserProfile.js";
 //import GerenciamentoProfessores from "views/Professores/gerenciamentoProfessores.js";
 import GerenciamentoAlunos from "views/Alunos/gerenciamentoAlunos.js";
 import GerenciamentoEnderecos from "views/Enderecos/gerenciamentoEnderecos";
+import GerenciamentoPessoasResponsaveis from "views/PessoasResponsaveis/gerenciamentoPessoasResponsaveis";
+import GerenciamentoRestaurantes from "views/Restaurantes/gerenciamentoRestaurantes";
 import TableList from "views/TableList/TableList.js";
 import Typography from "views/Typography/Typography.js";
 import Icons from "views/Icons/Icons.js";
@@ -38,7 +41,13 @@ import Maps from "views/Maps/Maps.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
-import { EmojiEmotions, EmojiPeople, PersonOutline, Place } from "@material-ui/icons";
+import {
+  EmojiEmotions,
+  EmojiPeople,
+  PersonOutline,
+  Place,
+  Restaurant,
+} from "@material-ui/icons";
 
 const dashboardRoutes = [
   /*
@@ -64,6 +73,22 @@ const dashboardRoutes = [
     rtlName: "Endereços",
     icon: Place,
     component: GerenciamentoEnderecos,
+    layout: "/admin",
+  },
+  {
+    path: "/pessoasResponsaveis",
+    name: "Gerenciamento de Pessoas Responsáveis",
+    rtlName: "Pessoas Responsáveis",
+    icon: SupervisorAccount,
+    component: GerenciamentoPessoasResponsaveis,
+    layout: "/admin",
+  },
+  {
+    path: "/restaurantes",
+    name: "Gerenciamento de Restaurantes",
+    rtlName: "Restaurantes",
+    icon: Restaurant,
+    component: GerenciamentoRestaurantes,
     layout: "/admin",
   },
   // {

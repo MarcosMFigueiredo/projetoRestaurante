@@ -11,7 +11,7 @@ const GerenciamentoEnderecos = (props) => {
 
     function handleClick() {
         axios
-            .get("https://demo8249794.mockable.io/enderecos")
+            .get("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/enderecos")
             .then((response) => {
                 console.log(response)
                 const enderecos = response.data.lista.map((c) => {
@@ -48,7 +48,7 @@ const GerenciamentoEnderecos = (props) => {
 
     function handleUpdate(newData) {
         axios
-          .put("https://demo8249794.mockable.io/enderecos", {
+          .put("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/enderecos", {
             id: newData.id,
             rua: newData.rua,
             numero: newData.numero,
@@ -64,7 +64,7 @@ const GerenciamentoEnderecos = (props) => {
 
     function handleDelete(newData) {
         axios
-          .delete("https://demo8249794.mockable.io/enderecos", {
+          .delete("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/enderecos", {
             id: newData.id,
           })
           .then(function (response) {
@@ -78,7 +78,7 @@ const GerenciamentoEnderecos = (props) => {
           columns={[
             { title: "Id", field: "id" },
             { title: "Rua", field: "rua" },
-            { title: "Número", field: "numero", type: "numerico" },
+            { title: "Número", field: "numero", type: "numeric" },
             { title: "CEP", field: "cep" },
             { title: "Cidade", field: "cidade" },
             { title: "Estado", field: "estado" },

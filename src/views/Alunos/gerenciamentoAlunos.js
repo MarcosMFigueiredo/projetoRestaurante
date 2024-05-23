@@ -5,11 +5,26 @@ import MaterialTable from "material-table";
 const GerenciamentoAlunos = (props) => {
   const { useState, useEffect } = React;
 
+  const [lookupData, setLookupData] = useState({});
   const [data, setData] = useState([]);
 
   useEffect(() => {
     handleClick();
+    fetchEnderecos()
   }, []);
+
+  function fetchEnderecos() {
+    axios
+      .get("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/enderecos")
+      .then((response) => {
+        const enderecos = response.data.lista.reduce((acc, endereco) => {
+          acc[endereco.id] = `${endereco.id} - ${endereco.rua}`;
+          return acc;
+        }, {});
+        setLookupData(enderecos);
+      })
+      .catch((error) => console.log(error));
+  }
 
   function handleClick() {
     axios
@@ -33,7 +48,7 @@ const GerenciamentoAlunos = (props) => {
 
   function handleCreate(newData) {
     axios
-      .post("https://demo7955835.mockable.io/alunos", {
+      .post("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/alunos", {
         id: newData.id,
         cpf: newData.cpf,
         matricula: newData.matricula,
@@ -48,7 +63,7 @@ const GerenciamentoAlunos = (props) => {
 
   function handleUpdate(newData) {
     axios
-      .put("https://demo7955835.mockable.io/alunos", {
+      .put("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/alunos", {
         id: newData.id,
         cpf: newData.cpf,
         matricula: newData.matricula,
@@ -73,14 +88,15 @@ const GerenciamentoAlunos = (props) => {
 
   return [
     <MaterialTable
+
       title="Gerenciamento de Alunos"
       columns={[
         { title: "Id", field: "id" },
-        { title: "cpf", field: "cpf" },
-        { title: "matricula", field: "matricula", type: "numerico" },
-        { title: "nome", field: "nome" },
-        { title: "endereco", field: "idEndereco" },
-        { title: "curso", field: "curso" },
+        { title: "CPF", field: "cpf" },
+        { title: "Matrícula", field: "matricula", type: "numeric" },
+        { title: "Nome", field: "nome" },
+        { title: "Endereço", field: "idEndereco", lookup: lookupData},
+        { title: "Curso", field: "curso" },
       ]}
       data={data}
       editable={{
