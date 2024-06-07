@@ -11,10 +11,10 @@ const GerenciamentoEnderecos = (props) => {
 
     function handleClick() {
         axios
-            .get("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/enderecos")
+            .get("http://localhost:8080/api/v1/enderecos")
             .then((response) => {
                 console.log(response)
-                const enderecos = response.data.lista.map((c) => {
+                const enderecos = response.data.map((c) => {
                     return {
                         id: c.id,
                         rua: c.rua,
@@ -31,8 +31,9 @@ const GerenciamentoEnderecos = (props) => {
     }
 
     function handleCreate(newData) {
+      console.log(newData)
         axios
-        .post("", {
+        .post("http://localhost:8080/api/v1/enderecos", {
             id: newData.id,
             rua: newData.rua,
             numero: newData.numero,
@@ -48,7 +49,7 @@ const GerenciamentoEnderecos = (props) => {
 
     function handleUpdate(newData) {
         axios
-          .put("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/enderecos", {
+          .post("http://localhost:8080/api/v1/enderecos", {
             id: newData.id,
             rua: newData.rua,
             numero: newData.numero,
@@ -64,9 +65,7 @@ const GerenciamentoEnderecos = (props) => {
 
     function handleDelete(newData) {
         axios
-          .delete("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/enderecos", {
-            id: newData.id,
-          })
+          .delete(`http://localhost:8080/api/v1/enderecos/${newData.id}`)
           .then(function (response) {
             console.log("Endereço deletado com sucesso.");
           });
@@ -101,6 +100,7 @@ const GerenciamentoEnderecos = (props) => {
             onRowUpdate: (newData, oldData) =>
               new Promise((resolve, reject) => {
                 setTimeout(() => {
+                  handleUpdate(newData)
                   const dataUpdate = [...data];
                   const index = oldData.tableData.id;
                   dataUpdate[index] = newData;
