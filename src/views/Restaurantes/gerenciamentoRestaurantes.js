@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import MaterialTable from "material-table";
+import { format } from 'date-fns';
 
 const GerenciamentoRestaurantes = (props) => {
   const { useState, useEffect } = React;
@@ -11,15 +12,15 @@ const GerenciamentoRestaurantes = (props) => {
 
   useEffect(() => {
     handleClick();
-    fetchEnderecos()
-    fetchPessoasResponsaveis()
+    fetchEnderecos();
+    fetchPessoasResponsaveis();
   }, []);
 
   function fetchEnderecos() {
     axios
-      .get("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/enderecos")
+      .get("http://localhost:8080/api/v1/enderecos")
       .then((response) => {
-        const enderecos = response.data.lista.reduce((acc, endereco) => {
+        const enderecos = response.data.reduce((acc, endereco) => {
           acc[endereco.id] = `${endereco.id} - ${endereco.rua}`;
           return acc;
         }, {});
@@ -30,9 +31,9 @@ const GerenciamentoRestaurantes = (props) => {
 
   function fetchPessoasResponsaveis() {
     axios
-      .get("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/pessoasResponsaveis")
+      .get("http://localhost:8080/api/v1/pessoasResponsaveis")
       .then((response) => {
-        const pessoaResponsavel = response.data.lista.reduce((acc, pessoa) => {
+        const pessoaResponsavel = response.data.reduce((acc, pessoa) => {
           acc[pessoa.id] = `${pessoa.id} - ${pessoa.nome}`;
           return acc;
         }, {});
@@ -41,22 +42,21 @@ const GerenciamentoRestaurantes = (props) => {
       .catch((error) => console.log(error));
   }
 
-
   function handleClick() {
     axios
-      .get("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/restaurantes")
+      .get("http://localhost:8080/api/v1/restaurantes")
       .then((response) => {
-        console.log(response)
-        const restaurantes = response.data.lista.map((c) => {
+        console.log(response);
+        const restaurantes = response.data.map((c) => {
           return {
             id: c.id,
             nome: c.nome,
-            idEndereco: c.idEndereco,
-            idPessoaResponsavel: c.idPessoaResponsavel,
+            idEndereco: c.endereco.id,
+            idPessoaResponsavel: c.pessoaResponsavel.id,
             capacidadeRefeicoes: c.capacidadeRefeicoes,
-            horarioCafe: c.horarioCafe,
+            horarioCafeManha: c.horarioCafeManha,
             horarioAlmoco: c.horarioAlmoco,
-            horarioJanta: c.horarioJanta,
+            horarioJantar: c.horarioJantar,
             diasFuncionamento: c.diasFuncionamento,
           };
         });
@@ -67,15 +67,15 @@ const GerenciamentoRestaurantes = (props) => {
 
   function handleCreate(newData) {
     axios
-      .post("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/restaurantes", {
+      .post("http://localhost:8080/api/v1/restaurantes", {
         id: newData.id,
         nome: newData.nome,
-        idEndereco: newData.idEndereco,
-        idPessoaResponsavel: newData.idPessoaResponsavel,
+        endereco: {id: newData.idEndereco},
+        pessoaResponsavel: {id: newData.idPessoaResponsavel},
         capacidadeRefeicoes: newData.capacidadeRefeicoes,
-        horarioCafe: newData.horarioCafe,
-        horarioAlmoco: newData.horarioAlmoco,
-        horarioJanta: newData.horarioJanta,
+        horarioCafeManha: format(new Date(newData.horarioCafeManha), 'HH:mm:ss'),
+        horarioAlmoco: format(new Date(newData.horarioAlmoco), 'HH:mm:ss'),
+        horarioJantar: format(new Date(newData.horarioJantar), 'HH:mm:ss'),
         diasFuncionamento: newData.diasFuncionamento,
       })
       .then(function (response) {
@@ -83,17 +83,17 @@ const GerenciamentoRestaurantes = (props) => {
       });
   }
 
-  function handleUpdate(newData) {
+  function handleUpdate(newData, oldData) {
     axios
-      .put("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/restaurantes", {
+      .post("http://localhost:8080/api/v1/restaurantes", {
         id: newData.id,
         nome: newData.nome,
-        idEndereco: newData.idEndereco,
-        idPessoaResponsavel: newData.idPessoaResponsavel,
+        endereco: {id: newData.idEndereco},
+        pessoaResponsavel:  {id: newData.idPessoaResponsavel},
         capacidadeRefeicoes: newData.capacidadeRefeicoes,
-        horarioCafe: newData.horarioCafe,
-        horarioAlmoco: newData.horarioAlmoco,
-        horarioJanta: newData.horarioJanta,
+        horarioCafeManha: newData.horarioCafeManha !== oldData.horarioCafeManha ? format(new Date(newData.horarioCafeManha), 'HH:mm:ss') : newData.horarioCafeManha,
+        horarioAlmoco: newData.horarioAlmoco !== oldData.horarioAlmoco ? format(new Date(newData.horarioAlmoco), 'HH:mm:ss') : newData.horarioAlmoco,
+        horarioJantar: newData.horarioJantar !== oldData.horarioJantar ? format(new Date(newData.horarioJantar), 'HH:mm:ss') : newData.horarioJantar,
         diasFuncionamento: newData.diasFuncionamento,
       })
       .then(function (response) {
@@ -103,17 +103,14 @@ const GerenciamentoRestaurantes = (props) => {
 
   function handleDelete(newData) {
     axios
-      .delete("https://57386a75-0197-4cec-9ec3-626b8b295f9e.mock.pstmn.io/restaurantes", {
-        id: newData.id,
-      })
+      .delete(`http://localhost:8080/api/v1/restaurantes/${newData.id}`)
       .then(function (response) {
         console.log("Restaurante deletado com sucesso.");
       });
   }
 
-  return [
+  return (
     <MaterialTable
-
       title="Gereciamento de Restaurantes"
       columns={[
         { title: "Id", field: "id" },
@@ -121,11 +118,10 @@ const GerenciamentoRestaurantes = (props) => {
         { title: "Endereço", field: "idEndereco", lookup: lookupDataEndereco },
         { title: "Pessoa Responsável", field: "idPessoaResponsavel", lookup: lookupDataPessoaResponsavel },
         { title: "Capacidade de Refeições", field: "capacidadeRefeicoes", type: "numeric"},
-        { title: "Horário do Café da Manhã", field: "horarioCafe", type: "time" },
+        { title: "Horário do Café da Manhã", field: "horarioCafeManha", type: "time" },
         { title: "Horário do Almoço", field: "horarioAlmoco", type: "time" },
-        { title: "Horário da Janta", field: "horarioJanta", type: "time" },
+        { title: "Horário da Janta", field: "horarioJantar", type: "time" },
         { title: "Dias de Funcionamento", field: "diasFuncionamento"}
-
       ]}
       data={data}
       editable={{
@@ -144,6 +140,7 @@ const GerenciamentoRestaurantes = (props) => {
         onRowUpdate: (newData, oldData) =>
           new Promise((resolve, reject) => {
             setTimeout(() => {
+              handleUpdate(newData, oldData);
               const dataUpdate = [...data];
               const index = oldData.tableData.id;
               dataUpdate[index] = newData;
@@ -165,8 +162,8 @@ const GerenciamentoRestaurantes = (props) => {
             }, 1000);
           }),
       }}
-    />,
-  ];
+    />
+  );
 };
 
 export default GerenciamentoRestaurantes;
